@@ -1,0 +1,8 @@
+<h2>Detalle del lenguaje</h2>
+<p>ID: {{ selectedLanguage.id }}</p>
+<p>Nombre: {{ selectedLanguage.name }}</p>
+<p>Fecha de creación: {{ selectedLanguage.creationDate | date }}</p>
+<p>Popularidad: {{ selectedLanguage.popularity }}</p>
+<p>Cantidad de cambios: {{ changesCount }}</p>
+<button (click)="onClean()">Limpiar</button>
+<button (click)="onRemove()">Eliminar</button>

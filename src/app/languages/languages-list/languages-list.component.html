@@ -1,0 +1,6 @@
+<h1>Lenguajes de programación</h1>
+<ul>
+	<li *ngFor="let language of languages" (click)="onSelect(language)">
+		ID: {{ language.id }}, Nombre: {{ language.name }}
+	</li>
+</ul>
