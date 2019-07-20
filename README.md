@@ -1,27 +1,19 @@
-# Training
+# Para correr esta app
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.1.
+1. Verificar que tengamos instalado node.js
+2. Verificar que tengamos instalado Angular CLI
+3. Clonar este repo en un directorio de su preferencia. Al clonarse, se debería generar una carpeta llamada training
+4. Dentro de la carpeta training, correr el comando `npm install` para instalar las dependencias del proyecto
+5. Correr el proyecto con `ng serve`
+6. Abrir en una pestaña del navegador web la URL `http://localhost:4200/`
 
-## Development server
+# Si no tenemos node.js instalado
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. Ir a la [web oficial de Node](https://nodejs.org/es/)
+2. Descargar el instalador de la versión LTS
+3. Seguir las instrucciones del instalador (siguiendo la regla infalible del siguiente, siguiente, siguiente debería bastar :p)
 
-## Code scaffolding
+# Si no tenemos Angular CLI instalado
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+1. Abrir una consola (puede ser cualquiera - cmd, Windows Power Shell, GIT bash, etc) en cualquier directorio
+2. Correr el comando `npm install -g @angular/cli` para instalar Angular CLI de forma global
