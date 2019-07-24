@@ -37,21 +37,21 @@ export class MockApi implements HttpInterceptor {
 			switch (resource) {
 				case 'languages':
 
-					const responseForLanguages = this.getResponseForLanguages(method, id, body);
+					const response = this.getResponseForLanguages(method, +id, body);
 
-					const hasError = responseForLanguages instanceof Error;
+					const hasError = response instanceof Error;
 					if (hasError) {
-						observer.error((responseForLanguages as Error).message);
-						return;
+						observer.error((response as Error).message);
+						return observer.complete();
 					}
 
-					observer.next(new HttpResponse({ body: responseForLanguages, status: 200 }));
-					observer.complete();
+					observer.next(new HttpResponse({ body: response, status: 200 }));
+					return observer.complete();
 			}
 		});
 	}
 
-	private getResponseForLanguages(method: string, id: string, data?: any): any {
+	private getResponseForLanguages(method: string, id: number, data: any): any {
 		switch (method) {
 			case 'GET':
 				return !id ? this.getAllLanguages() : this.getOneLanguage(id);
@@ -68,16 +68,20 @@ export class MockApi implements HttpInterceptor {
 		return this.languages;
 	}
 
-	private getOneLanguage(id: string): any {
-		return this.languages.find(language => language.id === +id);
+	private getOneLanguage(id: number): any {
+		return this.languages.find(language => language.id === id);
 	}
 
 	private createLanguage(data: any): Error | void {
 
 		const { id, name, creationDate, popularity } = data;
 
-		if (id || !name || !creationDate || !popularity) {
-			return new Error('Los parámetros name, creationDate, popularity y id son requeridos');
+		if (!name || !creationDate || !popularity) {
+			return new Error('Los parámetros name, creationDate y popularity son requeridos');
+		}
+
+		if (id) {
+			return new Error('El parámetro id no puede ser utilizado al crear un nuevo lenguaje');
 		}
 
 		const lastId = this.languages.reduce((higherId, l) => higherId < l.id ? l.id : higherId, this.languages[0].id);
@@ -86,14 +90,15 @@ export class MockApi implements HttpInterceptor {
 		this.languages.push(language);
 	}
 
-	private updateLanguage(id: string, data: any): Error | void {
+	private updateLanguage(id: number, data: any): Error | void {
 
 		const { name, creationDate, popularity } = data;
+
 		if (!name || !creationDate || !popularity) {
 			return new Error('Los parámetros name, creationDate y popularity son requeridos');
 		}
 
-		const index = this.languages.findIndex(l => l.id === +id);
+		const index = this.languages.findIndex(l => l.id === id);
 		if (index === -1) {
 			return new Error('El lenguaje que se intenta actualizar no existe');
 		}
@@ -101,13 +106,13 @@ export class MockApi implements HttpInterceptor {
 		this.languages[index] = { ...this.languages[index], name, creationDate, popularity };
 	}
 
-	private deleteLanguage(id: string): Error | void {
+	private deleteLanguage(id: number): Error | void {
 
-		const index = this.languages.findIndex(l => l.id === +id);
+		const index = this.languages.findIndex(l => l.id === id);
 		if (index === -1) {
 			return new Error('El lenguaje que se intenta borrar no existe');
 		}
 
-		this.languages = this.languages.filter(language => language.id !== +id);
+		this.languages = this.languages.filter(language => language.id !== id);
 	}
 }
