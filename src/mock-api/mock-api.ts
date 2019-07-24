@@ -65,7 +65,7 @@ export class MockApi implements HttpInterceptor {
 	}
 
 	private getAllLanguages(): any[] {
-		return this.languages;
+		return this.languages.map(language => ({ id: language.id, name: language.name }));
 	}
 
 	private getOneLanguage(id: number): any {
