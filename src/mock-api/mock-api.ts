@@ -69,7 +69,11 @@ export class MockApi implements HttpInterceptor {
 	}
 
 	private getOneLanguage(id: number): any {
-		return this.languages.find(language => language.id === id);
+		const language = this.languages.find(l => l.id === id);
+		if (!language) {
+			return new Error('El lenguaje solicitado no existe o fue borrado');
+		}
+		return language;
 	}
 
 	private createLanguage(data: any): Error | void {
