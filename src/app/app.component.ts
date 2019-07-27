@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Popularity } from '../shared/definitions';
 import { Language } from '../shared/models';
+import { LanguagesService } from './languages/services/languages.service';
 
 @Component({
 	selector: 'app-root',
@@ -12,12 +12,14 @@ export class AppComponent implements OnInit {
 	languages: Language[];
 	selectedLanguage: Language;
 
+	constructor(private languagesService: LanguagesService) { }
+
 	ngOnInit() {
-		this.languages = [
-			new Language(1, 'javascript', new Date(1990, 10, 21), Popularity.high),
-			new Language(2, 'c++', new Date(1980, 9, 22), Popularity.low),
-			new Language(3, 'python', new Date(1991, 8, 10), Popularity.high),
-		];
+		this.getLanguages();
+	}
+
+	getLanguages() {
+		this.languagesService.get().subscribe(languages => this.languages = languages);
 	}
 
 	onClean() {
@@ -25,8 +27,12 @@ export class AppComponent implements OnInit {
 	}
 
 	onRemove(removed: Language) {
-		this.languages = this.languages.filter(language => language.id !== removed.id);
-		this.onClean();
+		this.languagesService
+			.delete(removed.id)
+			.subscribe(() => {
+				this.getLanguages();
+				this.onClean();
+			});
 	}
 
 	onSelect(language: Language) {

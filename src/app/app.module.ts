@@ -5,8 +5,9 @@ import { LOCALE_ID } from '@angular/core';
 import localeEsAr from '@angular/common/locales/es-AR';
 import { AppComponent } from './app.component';
 import { LanguagesModule } from './languages/languages.module';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MockApi } from '../mock-api/mock-api';
+import { CoreModule } from './core/core.module';
 
 registerLocaleData(localeEsAr);
 
@@ -16,7 +17,9 @@ registerLocaleData(localeEsAr);
 	],
 	imports: [
 		BrowserModule,
-		LanguagesModule
+		LanguagesModule,
+		HttpClientModule,
+		CoreModule
 	],
 	providers: [
 		{ provide: LOCALE_ID, useValue: 'es-AR' },

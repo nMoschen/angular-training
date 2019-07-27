@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, OnInit } from '@angular/core';
 import { Language } from '../../../shared/models';
+import { LanguagesService } from '../services/languages.service';
 
 @Component({
 	selector: 'app-language-detail',
@@ -11,16 +12,16 @@ export class LanguageDetailComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() selectedLanguage: Language;
 	@Output() clean = new EventEmitter<void>();
 	@Output() remove = new EventEmitter<Language>();
-	changesCount = 0;
+
+	constructor(private languagesService: LanguagesService) { }
 
 	ngOnInit() {
-		console.log('On init');
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		console.log('On changes');
-		if (changes.selectedLanguage) {
-			this.increaseCuonter();
+		if (changes.selectedLanguage && changes.selectedLanguage.currentValue) {
+			const language: Language = changes.selectedLanguage.currentValue;
+			this.getLanguage(language.id);
 		}
 	}
 
@@ -28,8 +29,8 @@ export class LanguageDetailComponent implements OnInit, OnChanges, OnDestroy {
 		console.log('On destroy');
 	}
 
-	increaseCuonter() {
-		this.changesCount++;
+	private getLanguage(id: number) {
+		this.languagesService.getOne(id).subscribe(language => this.selectedLanguage = language);
 	}
 
 	onClean() {
