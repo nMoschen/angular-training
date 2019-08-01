@@ -80,12 +80,9 @@ export class MockApi implements HttpInterceptor {
 
 		const { id, name, creationDate, popularity } = data;
 
-		if (!name || !creationDate || !popularity) {
-			return new Error('Los parámetros name, creationDate y popularity son requeridos');
-		}
-
-		if (id) {
-			return new Error('El parámetro id no puede ser utilizado al crear un nuevo lenguaje');
+		const error = this.getLanguageFormatError('create', name, creationDate, popularity, id);
+		if (error) {
+			return error;
 		}
 
 		const lastId = this.languages.reduce((higherId, l) => higherId < l.id ? l.id : higherId, this.languages[0].id);
@@ -94,18 +91,50 @@ export class MockApi implements HttpInterceptor {
 		this.languages.push(language);
 	}
 
-	private updateLanguage(id: number, data: any): Error | void {
-
-		const { name, creationDate, popularity } = data;
+	private getLanguageFormatError(
+		action: 'create' | 'update',
+		name: string,
+		creationDate: string,
+		popularity: 'high' | 'medium' | 'low',
+		id?: number
+	): null | Error {
 
 		if (!name || !creationDate || !popularity) {
 			return new Error('Los parámetros name, creationDate y popularity son requeridos');
 		}
 
-		const index = this.languages.findIndex(l => l.id === id);
-		if (index === -1) {
-			return new Error('El lenguaje que se intenta actualizar no existe');
+		if (isNaN(Date.parse(creationDate))) {
+			return new Error('El formato de la fecha de creación no es válido');
 		}
+
+		if (popularity !== 'high' && popularity !== 'medium' && popularity !== 'low') {
+			return new Error('El parámetro popularity debe ser "high", "medium" o "low"');
+		}
+
+		if (action === 'create' && id) {
+			return new Error('El parámetro id no puede ser utilizado al crear un nuevo lenguaje');
+		}
+
+		if (action === 'update') {
+			const index = this.languages.findIndex(l => l.id === id);
+			if (index === -1) {
+				return new Error('El lenguaje que se intenta actualizar no existe');
+			}
+		}
+
+		return null;
+	}
+
+	private updateLanguage(id: number, data: any): Error | void {
+
+		const { name, creationDate, popularity } = data;
+
+		const error = this.getLanguageFormatError('update', name, creationDate, popularity, id);
+		if (error) {
+			return error;
+		}
+
+		const index = this.languages.findIndex(l => l.id === id);
 
 		this.languages[index] = { ...this.languages[index], name, creationDate, popularity };
 	}
