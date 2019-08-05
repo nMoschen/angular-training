@@ -1,28 +1,30 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Language } from '../../../shared/models';
 import { LanguagesService } from '../services/languages.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
 	selector: 'app-language-detail',
 	templateUrl: './language-detail.component.html',
 	styleUrls: ['./language-detail.component.css']
 })
-export class LanguageDetailComponent implements OnInit, OnChanges, OnDestroy {
+export class LanguageDetailComponent implements OnInit, OnDestroy {
 
-	@Input() selectedLanguage: Language;
-	@Output() clean = new EventEmitter<void>();
-	@Output() remove = new EventEmitter<Language>();
+	selectedLanguage: Language;
 
-	constructor(private languagesService: LanguagesService) { }
+	constructor(
+		private languagesService: LanguagesService,
+		private route: ActivatedRoute,
+		private location: Location,
+		private router: Router
+	) { }
 
 	ngOnInit() {
-	}
-
-	ngOnChanges(changes: SimpleChanges) {
-		if (changes.selectedLanguage && changes.selectedLanguage.currentValue) {
-			const language: Language = changes.selectedLanguage.currentValue;
-			this.getLanguage(language.id);
-		}
+		this.route.paramMap.subscribe(params => {
+			const id = +params.get('id');
+			this.getLanguage(id);
+		});
 	}
 
 	ngOnDestroy() {
@@ -33,11 +35,15 @@ export class LanguageDetailComponent implements OnInit, OnChanges, OnDestroy {
 		this.languagesService.getOne(id).subscribe(language => this.selectedLanguage = language);
 	}
 
-	onClean() {
-		this.clean.emit();
+	goBack() {
+		this.location.back();
+	}
+
+	goToEdit() {
+		this.router.navigate(['../../edit', this.selectedLanguage.id], { relativeTo: this.route });
 	}
 
 	onRemove() {
-		this.remove.emit(this.selectedLanguage);
+		this.languagesService.delete(this.selectedLanguage.id).subscribe(() => this.goBack());
 	}
 }

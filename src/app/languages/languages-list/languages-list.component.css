@@ -1,3 +1,9 @@
-li:hover {
+mat-list-item:hover {
 	cursor: pointer;
+}
+
+.add-button {
+	position: fixed;
+	bottom: 2rem;
+	right: 2rem;
 }
