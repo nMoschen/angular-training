@@ -1,18 +1,24 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Language } from '../../../shared/models';
+import { LanguagesService } from '../services/languages.service';
 
 @Component({
 	selector: 'app-languages-list',
 	templateUrl: './languages-list.component.html',
 	styleUrls: ['./languages-list.component.css']
 })
-export class LanguagesListComponent {
+export class LanguagesListComponent implements OnInit {
 
-	@Input() languages: Language[];
-	@Output() languageSelect = new EventEmitter<Language>();
+	languages: Language[];
 
-	onSelect(language: Language) {
-		this.languageSelect.emit(language);
+	constructor(private languagesService: LanguagesService) { }
+
+	ngOnInit() {
+		this.getLanguages();
+	}
+
+	getLanguages() {
+		this.languagesService.get().subscribe(languages => this.languages = languages);
 	}
 
 }

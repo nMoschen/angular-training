@@ -1,6 +1,9 @@
 <h1>Lenguajes de programación</h1>
-<ul>
-	<li *ngFor="let language of languages" (click)="onSelect(language)">
+<mat-list role="list">
+	<a mat-list-item [routerLink]="['details', language.id]" *ngFor="let language of languages">
 		ID: {{ language.id }}, Nombre: {{ language.name }}
-	</li>
-</ul>
+	</a>
+</mat-list>
+<a class="add-button" mat-fab [routerLink]="['add']">
+	<mat-icon>add</mat-icon>
+</a>

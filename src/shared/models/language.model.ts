@@ -1,16 +1,21 @@
 import { Popularity } from '../definitions';
 
 export class Language {
-	id: number;
+	id?: number;
 	name: string;
 	creationDate?: Date;
 	popularity?: Popularity;
 
-	constructor(id: number, name: string, creationDate?: Date, popularity?: Popularity) {
-		this.id = id;
-		this.name = name;
+	constructor(data: {
+		name: string,
+		id?: number,
+		creationDate?: Date,
+		popularity?: Popularity
+	}) {
+		this.id = data.id;
+		this.name = data.name;
 
-		if (creationDate) { this.creationDate = creationDate; }
-		if (popularity) { this.popularity = popularity; }
+		if (data.creationDate) { this.creationDate = data.creationDate; }
+		if (data.popularity) { this.popularity = data.popularity; }
 	}
 }

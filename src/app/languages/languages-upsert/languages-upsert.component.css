@@ -1,0 +1,14 @@
+.upsert-form {
+	display: flex;
+	flex-direction: column;
+	max-width: 300px;
+}
+
+.upsert-form__actions {
+	display: flex;
+	justify-content: space-between;
+}
+
+mat-form-field {
+	margin-bottom: 1rem;
+}

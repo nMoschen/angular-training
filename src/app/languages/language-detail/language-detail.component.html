@@ -1,7 +1,12 @@
-<h2>Detalle del lenguaje</h2>
-<p>ID: {{ selectedLanguage.id }}</p>
-<p>Nombre: {{ selectedLanguage.name }}</p>
-<p>Fecha de creación: {{ selectedLanguage.creationDate | date }}</p>
-<p>Popularidad: {{ selectedLanguage.popularity }}</p>
-<button (click)="onClean()">Limpiar</button>
-<button (click)="onRemove()">Eliminar</button>
+<div class="detail-header">
+	<h2 class="detail-header__title">Detalle del lenguaje</h2>
+	<button mat-icon-button (click)="goToEdit()">
+		<mat-icon>edit</mat-icon>
+	</button>
+</div>
+<p>ID: {{ selectedLanguage && selectedLanguage.id }}</p>
+<p>Nombre: {{ selectedLanguage && selectedLanguage.name }}</p>
+<p>Fecha de creación: {{ selectedLanguage && selectedLanguage.creationDate | date }}</p>
+<p>Popularidad: {{ selectedLanguage && selectedLanguage.popularity }}</p>
+<button mat-button (click)="goBack()">Volver</button>
+<button mat-raised-button color="primary" (click)="onRemove()">Eliminar</button>

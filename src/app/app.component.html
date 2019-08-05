@@ -1,5 +1,2 @@
-<app-languages-list [languages]="languages" (languageSelect)="onSelect($event)"></app-languages-list>
-<app-language-detail *ngIf="selectedLanguage" [selectedLanguage]="selectedLanguage" (clean)="onClean()"
-	(remove)="onRemove($event)">
-</app-language-detail>
+<router-outlet></router-outlet>
 <app-loader></app-loader>

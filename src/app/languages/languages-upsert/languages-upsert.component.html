@@ -1,0 +1,27 @@
+<h1>{{ !id ? 'Creá un lenguaje' : 'Editá el lenguaje' }}</h1>
+<form class="upsert-form" [formGroup]="form" (ngSubmit)="submit()">
+	<mat-form-field>
+		<input formControlName="name" matInput placeholder="Nombre">
+		<mat-error *ngIf="name.errors?.required">El nombre es requerido</mat-error>
+		<mat-error *ngIf="name.errors?.minlength">El nombre tiene que tener 5 caracteres como mínimo
+		</mat-error>
+	</mat-form-field>
+	<mat-form-field>
+		<input matInput formControlName="creationDate" [matDatepicker]="picker" placeholder="Fecha de creación">
+		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+		<mat-datepicker #picker></mat-datepicker>
+		<mat-error *ngIf="creationDate.errors?.required">La fecha de creación es requerida</mat-error>
+	</mat-form-field>
+	<mat-form-field>
+		<mat-select formControlName="popularity" placeholder="Popularidad">
+			<mat-option *ngFor="let popularity of popularities" [value]="popularity.key">
+				{{ popularity.value }}
+			</mat-option>
+		</mat-select>
+		<mat-error *ngIf="popularity.errors?.required">La poularidad es requerida</mat-error>
+	</mat-form-field>
+	<div class="upsert-form__actions">
+		<button mat-button type="button" (click)="goBack()">Volver</button>
+		<button mat-raised-button color="primary" type="submit">{{ !id ? 'Crear' : 'Editar' }}</button>
+	</div>
+</form>
