@@ -1,7 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, map } from 'rxjs/operators';
+
+class User {
+	id: number;
+	name: string;
+	email: string;
+	password: string;
+	claims: string[];
+}
+
+class LoginRequest {
+	email: string;
+	password: string;
+}
+
+class LoginResponse {
+	token: string;
+	user: User;
+}
 
 @Injectable()
 export class MockApi implements HttpInterceptor {
@@ -11,6 +29,33 @@ export class MockApi implements HttpInterceptor {
 		{ id: 2, name: 'c++', creationDate: new Date(1980, 9, 22).toISOString(), popularity: 'low' },
 		{ id: 3, name: 'python', creationDate: new Date(1991, 8, 10).toISOString(), popularity: 'high' }
 	];
+
+	users = [
+		{
+			id: 1,
+			name: 'Nestor Moschen',
+			email: 'nestor.moschen@gmail.com',
+			password: '12345678',
+			claims: [
+				'LANGUAGES_CREATE',
+				'LANGUAGES_UPDATE',
+				'LANGUAGES_READ',
+				'LANGUAGES_DELETE',
+			]
+		},
+		{
+			id: 2,
+			name: 'Pedro Alonso',
+			email: 'pedro.alonso@gmail.com',
+			password: '11111111',
+			claims: [
+				'LANGUAGES_UPDATE',
+				'LANGUAGES_READ',
+			]
+		}
+	];
+
+	token: string;
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -28,33 +73,40 @@ export class MockApi implements HttpInterceptor {
 		const url = req.url;
 		const method = req.method;
 		const body = req.body;
+		const params = req.params;
 
 		const splittedUrl = url.split('/');
 		const resource = splittedUrl[1];
 		const id = splittedUrl[2];
 
 		return new Observable<HttpResponse<any>>(observer => {
+
+			let response;
+
 			switch (resource) {
 				case 'languages':
-
-					const response = this.getResponseForLanguages(method, +id, body);
-
-					const hasError = response instanceof Error;
-					if (hasError) {
-						observer.error((response as Error).message);
-						return observer.complete();
-					}
-
-					observer.next(new HttpResponse({ body: response, status: 200 }));
-					return observer.complete();
+					response = this.getResponseForLanguages(method, +id, body, params);
+					break;
+				case 'auth':
+					response = this.getResponseForAuth(method, body);
+					break;
 			}
+
+			const hasError = response instanceof Error;
+			if (hasError) {
+				observer.error((response as Error).message);
+				return observer.complete();
+			}
+
+			observer.next(new HttpResponse({ body: response, status: 200 }));
+			return observer.complete();
 		});
 	}
 
-	private getResponseForLanguages(method: string, id: number, data: any): any {
+	private getResponseForLanguages(method: string, id: number, data: any, params: HttpParams): any {
 		switch (method) {
 			case 'GET':
-				return !id ? this.getAllLanguages() : this.getOneLanguage(id);
+				return !id ? this.getAllLanguages(params) : this.getOneLanguage(id);
 			case 'POST':
 				return this.createLanguage(data);
 			case 'PUT':
@@ -64,8 +116,22 @@ export class MockApi implements HttpInterceptor {
 		}
 	}
 
-	private getAllLanguages(): any[] {
-		return this.languages.map(language => ({ id: language.id, name: language.name }));
+	private getResponseForAuth(method: string, data: any): any {
+		switch (method) {
+			case 'POST':
+				return this.login(data);
+		}
+	}
+
+	private getAllLanguages(params?: HttpParams): any[] {
+		if (!params.has('name')) {
+			return this.languages.map(language => ({ id: language.id, name: language.name }));
+		} else {
+			const name = params.get('name').trim();
+			return this.languages
+				.filter(language => language.name.includes(name))
+				.map(language => ({ id: language.id, name: language.name }));
+		}
 	}
 
 	private getOneLanguage(id: number): any {
@@ -147,5 +213,38 @@ export class MockApi implements HttpInterceptor {
 		}
 
 		this.languages = this.languages.filter(language => language.id !== id);
+	}
+
+	private login(data: LoginRequest): Error | LoginResponse {
+
+		this.cleanToken();
+
+		const { email, password } = { ...data };
+
+		if (!email || !password) {
+			return new Error('Los parámetros email y password son requeridos');
+		}
+
+		const user = this.users.find(u => u.email === email);
+		if (!user) {
+			return new Error('No existe ningún usuario con ese e-mail');
+		}
+		if (user.password !== password) {
+			return new Error('La constraseña no es correcta');
+		}
+
+		this.generateToken(user);
+		const response = { user, token: this.token };
+
+		return response;
+	}
+
+	private cleanToken() {
+		this.token = null;
+	}
+
+	private generateToken(user: any): string {
+		this.token = `${user.email}_${new Date().getMilliseconds()}`;
+		return this.token;
 	}
 }
