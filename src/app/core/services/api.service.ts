@@ -35,12 +35,16 @@ export class ApiService {
 		return this.execute(this.httpClient.delete(`${this.baseUrl}/${resource}/${id}`));
 	}
 
-	get(resource: string) {
-		return this.execute(this.httpClient.get(`${this.baseUrl}/${resource}`));
+	get(resource: string, params?) {
+		return this.execute(this.httpClient.get(`${this.baseUrl}/${resource}`, { params }));
 	}
 
 	getOne(resource: string, id: number | string) {
 		return this.execute(this.httpClient.get(`${this.baseUrl}/${resource}/${id}`));
+	}
+
+	login(resource: string, data: any) {
+		return this.execute(this.httpClient.post(`${this.baseUrl}/${resource}`, data));
 	}
 
 	update(resource: string, id: string | number, data: any) {

@@ -4,9 +4,9 @@
 		<mat-icon>edit</mat-icon>
 	</button>
 </div>
-<p>ID: {{ selectedLanguage && selectedLanguage.id }}</p>
-<p>Nombre: {{ selectedLanguage && selectedLanguage.name }}</p>
-<p>Fecha de creación: {{ selectedLanguage && selectedLanguage.creationDate | date }}</p>
-<p>Popularidad: {{ selectedLanguage && selectedLanguage.popularity }}</p>
+<p>ID: {{ selectedLanguage.id }}</p>
+<p>Nombre: {{ selectedLanguage.name }}</p>
+<p>Fecha de creación: {{ selectedLanguage.creationDate | date }}</p>
+<p>Popularidad: {{ selectedLanguage.popularity }}</p>
 <button mat-button (click)="goBack()">Volver</button>
 <button mat-raised-button color="primary" (click)="onRemove()">Eliminar</button>

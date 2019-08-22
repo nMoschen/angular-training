@@ -1,0 +1,15 @@
+<h1>Ingresa</h1>
+<form class="login-form" [formGroup]="form" (ngSubmit)="login()">
+	<mat-form-field>
+		<input formControlName="email" matInput placeholder="e-mail">
+		<mat-error *ngIf="email.errors?.required">El e-mail es requerido</mat-error>
+	</mat-form-field>
+	<mat-form-field>
+		<input formControlName="password" matInput placeholder="Contraseña" [type]="hide ? 'password' : 'text'">
+		<button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+			<mat-icon>{{ hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+		</button>
+		<mat-error *ngIf="password.errors?.required">La contraseña es requerida</mat-error>
+	</mat-form-field>
+	<button mat-raised-button color="primary" type="submit">Ingresar</button>
+</form>

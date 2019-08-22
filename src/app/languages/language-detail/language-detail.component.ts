@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Language } from '../../../shared/models';
 import { LanguagesService } from '../services/languages.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
 	templateUrl: './language-detail.component.html',
 	styleUrls: ['./language-detail.component.css']
 })
-export class LanguageDetailComponent implements OnInit, OnDestroy {
+export class LanguageDetailComponent implements OnInit {
 
 	selectedLanguage: Language;
 
@@ -21,18 +21,7 @@ export class LanguageDetailComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
-		this.route.paramMap.subscribe(params => {
-			const id = +params.get('id');
-			this.getLanguage(id);
-		});
-	}
-
-	ngOnDestroy() {
-		console.log('On destroy');
-	}
-
-	private getLanguage(id: number) {
-		this.languagesService.getOne(id).subscribe(language => this.selectedLanguage = language);
+		this.selectedLanguage = this.route.snapshot.data.language;
 	}
 
 	goBack() {
