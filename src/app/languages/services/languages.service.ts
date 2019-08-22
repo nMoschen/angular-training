@@ -22,9 +22,9 @@ export class LanguagesService {
 		return this.apiService.delete(this.resource, id);
 	}
 
-	get() {
+	get(params?) {
 		return this.apiService
-			.get(this.resource)
+			.get(this.resource, params)
 			.pipe(
 				map((resp: any[]) => resp.map((data: any) => new Language(data)))
 			);

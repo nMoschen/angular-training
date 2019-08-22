@@ -1,3 +1,7 @@
 export const environment = {
-  production: true
+	production: true,
+	api: {
+		base: 'mock-api',
+		languages: 'languages'
+	}
 };

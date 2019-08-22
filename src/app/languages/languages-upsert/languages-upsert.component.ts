@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LanguagesService } from '../services/languages.service';
 import { Location } from '@angular/common';
 import { Language } from '@shared/models';
-import { popularities, Popularity } from '@shared/definitions';
+import { popularities } from '@shared/definitions';
 import { ActivatedRoute } from '@angular/router';
+import { languageNameValidator } from '../validators/language-name.validator';
 
 @Component({
 	selector: 'app-languages-upsert',
@@ -38,18 +39,9 @@ export class LanguagesUpsertComponent implements OnInit {
 
 	private initForm() {
 		this.form = this.formBuilder.group({
-			name: [null, [Validators.required, Validators.minLength(5)]],
+			name: [null, [Validators.required, Validators.minLength(5)], [languageNameValidator(this.languagesService)]],
 			creationDate: [null, Validators.required],
 			popularity: [null, Validators.required]
-		});
-	}
-
-	private getLanguage() {
-		this.route.paramMap.subscribe(params => {
-			this.id = +params.get('id');
-			if (this.id) {
-				this.languagesService.getOne(this.id).subscribe(this.fillForm);
-			}
 		});
 	}
 
@@ -63,8 +55,11 @@ export class LanguagesUpsertComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.getLanguage();
 		this.initForm();
+		const language: Language = this.route.snapshot.data.language;
+		if (language) {
+			this.fillForm(language);
+		}
 	}
 
 	goBack() {

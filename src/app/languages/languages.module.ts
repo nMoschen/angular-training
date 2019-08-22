@@ -12,13 +12,14 @@ import {
 	MatDatepickerModule,
 	MatNativeDateModule
 } from '@angular/material';
-import { RouterModule } from '@angular/router';
 import { LanguagesUpsertComponent } from './languages-upsert/languages-upsert.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LanguagesRoutingModule } from './languages-routing.module';
+import { LanguagesComponent } from './languages/languages.component';
 
 
 @NgModule({
-	declarations: [LanguagesListComponent, LanguageDetailComponent, LanguagesUpsertComponent],
+	declarations: [LanguagesListComponent, LanguageDetailComponent, LanguagesUpsertComponent, LanguagesComponent],
 	imports: [
 		CommonModule,
 		MatButtonModule,
@@ -30,7 +31,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 		MatInputModule,
 		MatSelectModule,
 		ReactiveFormsModule,
-		RouterModule.forChild([])
+		LanguagesRoutingModule
 	],
 	exports: [LanguagesListComponent, LanguageDetailComponent]
 })
