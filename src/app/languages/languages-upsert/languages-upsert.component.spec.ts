@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LanguagesService } from '../services/languages.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatSelectModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LanguagesUpsertComponent', () => {
 	let component: LanguagesUpsertComponent;
@@ -13,6 +15,10 @@ describe('LanguagesUpsertComponent', () => {
 		TestBed.configureTestingModule({
 			schemas: [NO_ERRORS_SCHEMA],
 			imports: [
+				BrowserAnimationsModule,
+				MatSelectModule,
+				MatFormFieldModule,
+				MatInputModule,
 				ReactiveFormsModule,
 				RouterTestingModule
 			],
@@ -31,7 +37,7 @@ describe('LanguagesUpsertComponent', () => {
 		fixture.detectChanges();
 	});
 
-	xit('should create', () => {
+	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
 });
